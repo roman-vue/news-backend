@@ -1,34 +1,31 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AuthDto } from './dto/create-auth.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Patch('sign-in')
+  @ApiOperation({summary: 'iniciar session'})
+  public async auth(@Body() AuthDto: AuthDto) {
+    return this.authService.auth(AuthDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Patch('sign-up')
+  @ApiOperation({summary: 'registrarte en la plataforma'})
+  public async register(@Body() CreateUserDto: CreateUserDto) {
+    return this.authService.register(CreateUserDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+
+  @Patch(':token')
+  @ApiOperation({summary: 'genera nuevos token de acceso'})
+  public async refresh(@Param('token') token:string) {
+    return this.authService.refresh(token);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
 }
