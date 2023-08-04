@@ -10,8 +10,8 @@ export class Comments {
     content:string
     
     @ManyToOne(type => News, value => value.comments)
-    news:News[]
+    news:News
 
     @ManyToOne(type => Users, value => value.comments)
-    user:Users[]
+    user:Users
 }

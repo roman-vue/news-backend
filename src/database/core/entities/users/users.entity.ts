@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { News } from "../news";
 import { Comments } from "../comments";
+import { Likes } from "../likes";
 
 @Entity('users')
 export class Users {
@@ -8,7 +9,7 @@ export class Users {
     id:string
     @Column({nullable:true})
     name:string
-    @Column({nullable:true})
+    @Column({nullable:true, unique:true})
     email:string
     @Column({nullable:true})
     password:string
@@ -19,6 +20,6 @@ export class Users {
     @OneToMany(type => Comments, value => value.user)
     comments:Comments[]
 
-    @OneToMany(type => Comments, value => value.user)
-    likes:Comments[]
+    @OneToMany(type => Likes, value => value.user)
+    likes:Likes[]
 }

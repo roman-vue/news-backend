@@ -8,8 +8,8 @@ export class Likes {
     id:string
     
     @ManyToOne(type => News, value => value.likes)
-    news:News[]
+    news:News
 
     @ManyToOne(type => Users, value => value.likes)
-    user:Users[]
+    user:Users
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,9 +9,16 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(@InjectRepository(Users) private readonly usersRepository: Repository<Users>){}
   public async create(createUserDto: CreateUserDto) {
-    createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
-    const save = await this.usersRepository.save(createUserDto)
-    return save
+    try{
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
+      const save = await this.usersRepository.save(createUserDto)
+      return save
+    }catch(err){
+        if(err.code == '23505'){
+          throw new ConflictException(`este correo ${createUserDto.email} electronico ya esta registrado`)
+        }
+    }
+    
   }
 
   public async findAll() {
@@ -21,7 +28,14 @@ export class UsersService {
 
   public async findOne(id: string) {
     const find  = await this.usersRepository.findOne({where:{id:id}})
-    if(!find) throw new NotFoundException(`losiento este id du usuario no existe ${id}`)
+    if(!find) throw new NotFoundException(`losiento este id de usuario no existe ${id}`)
+    return find
+  }
+
+  
+  public async findByEmail(email: string) {
+    const find  = await this.usersRepository.findOne({where:{email:email}})
+    if(!find) throw new NotFoundException(`losiento este email de usuario no existe ${email}`)
     return find
   }
 
