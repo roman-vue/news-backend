@@ -16,7 +16,7 @@ import * as entities from './core/entities';
           username: configService.get('PGUSER'),
           password: configService.get('PGPASSWORD'),
           database: configService.get('PGDATABASE'),
-          logging: true,
+          logging: false,
           entities: Object.values(entities),
           autoLoadEntities:true,
           synchronize: true,
