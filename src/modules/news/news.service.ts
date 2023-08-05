@@ -28,19 +28,19 @@ export class NewsService {
   }
 
   public async findAll() {
-   const find = await this.newsRepository.find({relations:['comments', 'likes']})
+   const find = await this.newsRepository.find({relations:['comments', 'likes', 'user']})
    return find
   }
 
   public async myNews(token:string) {
     const decoded = await jwt.decode(token)
     const verifyUser = await this.userService.findOne(decoded.sub.toString());
-    const list = await this.newsRepository.find({where:{user:verifyUser}, relations:['comments', 'likes']})
+    const list = await this.newsRepository.find({where:{user:verifyUser}, relations:['comments', 'likes', 'user']})
     return list
   }
 
   public async findOne(id: string) {
-    const find = await this.newsRepository.findOne({where:{id:id}})
+    const find = await this.newsRepository.findOne({where:{id:id}, relations:['comments', 'likes', 'user']})
     if(!find){
       throw new NotFoundException(`losiento este id ${id} de noticia no existe`)
     }
