@@ -1,3 +1,8 @@
+## RUTA DEL SWAGGER 
+```
+http://localhost:3000/api/v1/news/docs#
+```
+
 ## VARIABLES DE ENTORNO
 ```bash
 ##JWT
